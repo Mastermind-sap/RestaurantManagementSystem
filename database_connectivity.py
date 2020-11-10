@@ -12,7 +12,7 @@ class Database:
         # using database restaurant
         self.mycursor.execute("use restaurant;")
 
-     # checks whether the python and mysql connection has been build properly
+    # checks whether the python and mysql connection has been build properly
     def check_connection(self):
         if self.mydb :
             print("Connection successful")
@@ -22,6 +22,7 @@ class Database:
     # function to create database
     def create_database(self, database_name, condition="if not exists "):
         self.mycursor.execute("create database "+condition+database_name)
+        self.mydb.commit()
 
     # function to show databases
     def show_databases(self):
@@ -43,3 +44,29 @@ class Database:
     def insert_values(self):
         pass
 
+    # function to delete values in table
+    def delete_values(self):
+        pass
+
+    # function to read values in table
+    def read_table(self, tablename, fields="*"):
+        self.mycursor.execute("select "+fields+" from "+tablename)
+        myresult = self.mycursor.fetchall()
+        for row in myresult:
+            print(row)
+
+    # function to update values in table
+    def update(self):
+        pass
+
+    # function to delete a table
+    def delete_table(self, tablename):
+        sql = "drop table "+tablename
+        self.mycursor.execute(sql)
+        self.mydb.commit()
+
+    # function to delete a database
+    def delete_database(self, dbname):
+        sql = "drop database "+dbname
+        self.mycursor.execute(sql)
+        self.mydb.commit()
