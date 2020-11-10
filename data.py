@@ -1,7 +1,25 @@
-# # Data variables for multiple restaurants
-# next_vacant_restaurant_id=
-# Restaurants={1:["m","e"]} #Restaurant id as key: Values=[manager password,user password]
-# Menus={1:{"item1":10,"item2":20}}#Restaurant id as key: Values=Menu(dict)
-# Orders={1:{}}#Restaurant id as key: Values={order number:[name,{menu items ordered}]}
+# package to take masked input for passwords in terminal
+import stdiomask
 
 
+# data to be used to access local sql server
+username = "root"
+password = "mysql"
+
+
+class Data:
+    def __init__(self):
+        # Taking user and password to be used to create python-sql connectivity
+        print("DATABASE AUTHENTICATION")
+        user = input("Username: ")
+        if len(user) != 0:
+            global username
+            username = user
+        else:
+            print("Default user to be used")
+        passwd = stdiomask.getpass("Password: ",mask="*")
+        if len(passwd) != 0 :
+            global password
+            password = passwd
+        else:
+            print("Default password to be used")

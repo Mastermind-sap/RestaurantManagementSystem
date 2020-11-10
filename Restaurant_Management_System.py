@@ -1,9 +1,12 @@
-import Manager, Employee,data
+import Manager, Employee,data,database_connectivity
 
 
 class RestaurantManagementSystem:
 
     def __init__(self):
+        data.Data()
+        self.db=database_connectivity.Database()
+        self.db.check_connection()
         self.manager=Manager.Manager()
         self.employee=Employee.Employee()
         pass
