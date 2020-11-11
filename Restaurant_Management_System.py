@@ -1,4 +1,7 @@
-import Manager, Employee,data,database_connectivity
+import Manager
+import Employee
+import data
+import database_connectivity
 
 
 class RestaurantManagementSystem:
@@ -7,6 +10,7 @@ class RestaurantManagementSystem:
         data.Data()
         self.db=database_connectivity.Database()
         self.db.check_connection()
+        self.db.main()
         self.manager=Manager.Manager()
         self.employee=Employee.Employee()
         pass

@@ -7,10 +7,6 @@ class Database:
         # Creating python and mysql connectivity using mysql.connector library
         self.mydb = mysql.connector.connect(host="localhost", user=data.username, passwd=data.password)
         self.mycursor = self.mydb.cursor()
-        # creating database "restaurant" if it is not created already before
-        self.mycursor.execute("create database if not exists restaurant")
-        # using database restaurant
-        self.mycursor.execute("use restaurant;")
 
     # checks whether the python and mysql connection has been build properly
     def check_connection(self):
@@ -70,3 +66,36 @@ class Database:
         sql = "drop database "+dbname
         self.mycursor.execute(sql)
         self.mydb.commit()
+
+    def main(self):
+        # creating database "restaurant" if it is not created already before
+        self.mycursor.execute("create database if not exists restaurant")
+        # using database restaurant
+        self.mycursor.execute("use restaurant;")
+
+        # creating table for manager details
+        manager_query="""CREATE TABLE IF NOT EXISTS managers(
+                                manager_ID INTEGER NOT NULL PRIMARY KEY,
+                                manager_name TEXT,
+                                manager_password TEXT)"""
+        self.mycursor.execute(manager_query)
+
+        # creating table for employee details
+        employee_query = """CREATE TABLE IF NOT EXISTS employees(
+                                        employee_ID INTEGER NOT NULL PRIMARY KEY,
+                                        employee_name TEXT,
+                                        employee_password TEXT)"""
+        self.mycursor.execute(employee_query)
+
+        # creating table for menu details
+        menu_query="""CREATE TABLE IF NOT EXISTS menu(
+                                        item_NO INTEGER NOT NULL PRIMARY KEY,
+                                        item TEXT,
+                                        price FLOAT)"""
+        self.mycursor.execute(menu_query)
+
+        # creating table for tax details
+        tax_query = """CREATE TABLE IF NOT EXISTS tax(
+                                                CGST FLOAT,
+                                                SGST FLOAT)"""
+        self.mycursor.execute(tax_query)
