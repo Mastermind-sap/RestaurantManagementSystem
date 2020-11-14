@@ -5,7 +5,8 @@ import stdiomask
 # data to be used to access local sql server
 username = "root"
 password = "mysql"
-
+vacant_employee_id=1
+vacant_manager_id=1
 
 class Data:
     def __init__(self):

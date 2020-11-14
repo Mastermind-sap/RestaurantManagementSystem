@@ -4,6 +4,9 @@ import database_connectivity
 
 class Employee:
     def __init__(self):
+        data.Data()
+        self.db=database_connectivity.Database()
+        self.db.check_connection()
         pass
     def main(self):
         while True:

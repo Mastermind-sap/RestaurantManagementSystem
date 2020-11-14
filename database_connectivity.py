@@ -67,6 +67,31 @@ class Database:
         self.mycursor.execute(sql)
         self.mydb.commit()
 
+    # functions for manager
+
+    def add_manager(self,id,name,password):
+
+        pass
+
+    def remove_manager(self):
+        pass
+
+    def login_manager(self):
+        pass
+
+    # functions for employee
+
+    def add_employee(self):
+        pass
+
+    def remove_employee(self):
+        pass
+
+    def login_employee(self):
+        pass
+
+
+
     def main(self):
         # creating database "restaurant" if it is not created already before
         self.mycursor.execute("create database if not exists restaurant")
