@@ -8,7 +8,7 @@ class Employee:
         self.db.use_database("restaurant")
 
     def employee_login(self):
-        id = input("Employee ID: ")
+        id = int(input("Employee ID: "))
         passwd = stdiomask.getpass("Password: ", mask="*")
         if self.db.login_employee(id,passwd):
             return True

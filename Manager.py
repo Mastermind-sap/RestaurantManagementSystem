@@ -9,7 +9,7 @@ class Manager:
         self.db.use_database("restaurant")
 
     def manager_login(self):
-        id = input("Manager ID: ")
+        id = int(input("Manager ID: "))
         passwd = stdiomask.getpass("Password: ", mask="*")
         if self.db.login_manager(id,passwd):
             return True

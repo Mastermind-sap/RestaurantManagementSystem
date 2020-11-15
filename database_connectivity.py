@@ -113,7 +113,7 @@ class Database:
         self.mydb.commit()
 
     def login_employee(self, id ,password):
-        query = "SELECT employee_ID,employee_password FROM managers"
+        query = "SELECT employee_ID,employee_password FROM employees"
         self.mycursor.execute(query)
         data = self.mycursor.fetchall()
         for i in data:
