@@ -1,6 +1,9 @@
 import mysql.connector
 import data
 
+vacant_employee_id = 1
+vacant_manager_id = 1
+vacant_itemNo = 1
 
 class Database:
     def __init__(self):
@@ -25,6 +28,11 @@ class Database:
         self.mycursor.execute("show databases")
         for db in self.mycursor:
             print(db)
+
+    # function to use database
+    def use_database(self,name):
+        self.mycursor.execute("use "+name)
+
 
     # function to create tables in the database
     def create_table(self):
@@ -70,25 +78,48 @@ class Database:
     # functions for manager
 
     def add_manager(self,id,name,password):
+        query = "INSERT INTO managers VALUE ({},'{}','{}')".format(id,name,password)
+        self.mycursor.execute(query)
+        self.mydb.commit()
+        global vacant_manager_id
+        vacant_manager_id += 1
 
-        pass
+    def remove_manager(self,id):
+        query = "DELETE FROM managers WHERE manager_ID= {}".format(id)
+        self.mycursor.execute(query)
+        self.mydb.commit()
 
-    def remove_manager(self):
-        pass
-
-    def login_manager(self):
-        pass
+    def login_manager(self, id ,password):
+        query="SELECT manager_ID,manager_password FROM managers"
+        self.mycursor.execute(query)
+        data=self.mycursor.fetchall()
+        for i in data:
+            if (id,password)==i:
+                return True
+        return False
 
     # functions for employee
 
-    def add_employee(self):
-        pass
+    def add_employee(self,id,name,password):
+        query = "INSERT INTO employees VALUE ({},'{}','{}')".format(id, name, password)
+        self.mycursor.execute(query)
+        self.mydb.commit()
+        global vacant_employee_id
+        vacant_employee_id += 1
 
-    def remove_employee(self):
-        pass
+    def remove_employee(self,id):
+        query = "DELETE FROM employees WHERE employee_ID= {}".format(id)
+        self.mycursor.execute(query)
+        self.mydb.commit()
 
-    def login_employee(self):
-        pass
+    def login_employee(self, id ,password):
+        query = "SELECT employee_ID,employee_password FROM managers"
+        self.mycursor.execute(query)
+        data = self.mycursor.fetchall()
+        for i in data:
+            if (id, password) == i:
+                return True
+        return False
 
 
 

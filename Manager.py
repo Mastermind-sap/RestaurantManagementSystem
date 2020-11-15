@@ -1,26 +1,28 @@
-import data
 import database_connectivity
-import data
 # package to take masked input for passwords in terminal
 import stdiomask
 
 class Manager:
 
     def __init__(self):
-        data.Data()
         self.db=database_connectivity.Database()
-        self.db.check_connection()
-        pass
+        self.db.use_database("restaurant")
 
     def manager_login(self):
-        pass
+        id = input("Manager ID: ")
+        passwd = stdiomask.getpass("Password: ", mask="*")
+        if self.db.login_manager(id,passwd):
+            return True
+        else:
+            return False
 
     def manager_signup(self):
-        id=int(input("Enter manager id: "))
+        id=database_connectivity.vacant_manager_id
+        print("Your Manager ID: " + str(id))
         name=input("Enter name: ")
         passwd=stdiomask.getpass("Password: ",mask="*")
-
-        pass
+        self.db.add_manager(id,name,passwd)
+        print("Account created successfully")
 
 
     def main(self):
@@ -34,8 +36,10 @@ class Manager:
             if choice.isnumeric():
                 if int(choice) == 1:
                     if self.manager_login():
+                        print("LOGIN SUCCESSFUL")
                         pass
                     else:
+                        print("LOGIN UNSUCCESSFUL")
                         continue
                 elif int(choice) == 2:
                     self.manager_signup()
