@@ -1,10 +1,6 @@
 import mysql.connector
 import data
 
-vacant_employee_id = 1
-vacant_manager_id = 1
-vacant_itemNo = 1
-
 class Database:
     def __init__(self):
         # Creating python and mysql connectivity using mysql.connector library
@@ -81,8 +77,6 @@ class Database:
         query = "INSERT INTO managers VALUE ({},'{}','{}')".format(id,name,password)
         self.mycursor.execute(query)
         self.mydb.commit()
-        global vacant_manager_id
-        vacant_manager_id += 1
 
     def remove_manager(self,id):
         query = "DELETE FROM managers WHERE manager_ID= {}".format(id)
@@ -104,8 +98,6 @@ class Database:
         query = "INSERT INTO employees VALUE ({},'{}','{}')".format(id, name, password)
         self.mycursor.execute(query)
         self.mydb.commit()
-        global vacant_employee_id
-        vacant_employee_id += 1
 
     def remove_employee(self,id):
         query = "DELETE FROM employees WHERE employee_ID= {}".format(id)
@@ -121,7 +113,17 @@ class Database:
                 return True
         return False
 
+    # functions for vacancy
+    def vacancy_read(self, name):
+        query="""SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
+        self.mycursor.execute(query)
+        data = self.mycursor.fetchall()
+        return data[0][0]
 
+    def vacancy_update(self, name):
+        query = """UPDATE vacancy SET ID =ID + 1 WHERE name = '{}'""".format(name)
+        self.mycursor.execute(query)
+        self.mydb.commit()
 
     def main(self):
         # creating database "restaurant" if it is not created already before
@@ -152,6 +154,30 @@ class Database:
 
         # creating table for tax details
         tax_query = """CREATE TABLE IF NOT EXISTS tax(
-                                                CGST FLOAT,
-                                                SGST FLOAT)"""
+                                                tax TEXT,
+                                                percent FLOAT)"""
         self.mycursor.execute(tax_query)
+
+        # creating table for vacancy details
+        vacancy_query = """CREATE TABLE IF NOT EXISTS vacancy(
+                                                name TEXT,
+                                                id INTEGER DEFAULT 1)"""
+        self.mycursor.execute(vacancy_query)
+
+        vacant_employee_id_query="""INSERT INTO vacancy (name)
+                                SELECT("vacant_employee_id")
+                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_employee_id")"""
+        self.mycursor.execute(vacant_employee_id_query)
+        self.mydb.commit()
+
+        vacant_manager_id_query = """INSERT INTO vacancy (name)
+                                        SELECT("vacant_manager_id")
+                                        WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_manager_id")"""
+        self.mycursor.execute(vacant_manager_id_query)
+        self.mydb.commit()
+
+        vacant_itemNo_query = """INSERT INTO vacancy (name)
+                                                SELECT("vacant_itemNo")
+                                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_itemNo")"""
+        self.mycursor.execute(vacant_itemNo_query)
+        self.mydb.commit()

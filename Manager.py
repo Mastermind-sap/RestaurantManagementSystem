@@ -17,12 +17,13 @@ class Manager:
             return False
 
     def manager_signup(self):
-        id=database_connectivity.vacant_manager_id
+        id=self.db.vacancy_read("vacant_manager_id")
         print("Your Manager ID: " + str(id))
         name=input("Enter name: ")
         passwd=stdiomask.getpass("Password: ",mask="*")
         self.db.add_manager(id,name,passwd)
         print("Account created successfully")
+        self.db.vacancy_update("vacant_manager_id")
 
 
     def main(self):

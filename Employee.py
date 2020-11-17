@@ -16,12 +16,13 @@ class Employee:
             return False
 
     def employee_signup(self):
-        id=database_connectivity.vacant_employee_id
+        id=self.db.vacancy_read("vacant_employee_id")
         print("Your Employee ID: "+str(id))
         name=input("Enter name: ")
         passwd=stdiomask.getpass("Password: ",mask="*")
         self.db.add_employee(id,name,passwd)
         print("Account created successfully")
+        self.db.vacancy_update("vacant_employee_id")
 
     def main(self):
         while True:
