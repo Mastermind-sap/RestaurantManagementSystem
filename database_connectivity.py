@@ -125,9 +125,9 @@ class Database:
         self.mycursor.execute(rem_query)
         self.mydb.commit()
 
-    def show_menu(self):ROM menu"""
-        self.mycursor.execute(read_qu
-        read_query="""SELECT * Fery)
+    def show_menu(self):
+        read_query="""SELECT * FROM menu"""
+        self.mycursor.execute(read_query)
         data=self.mycursor.fetchall()
         print("item_NO  |  item  |  price")
         for i in data:
