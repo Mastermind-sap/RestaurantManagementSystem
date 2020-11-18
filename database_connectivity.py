@@ -113,6 +113,29 @@ class Database:
                 return True
         return False
 
+    # functions for menu
+
+    def add_item(self,num,name,price):
+        add_query="INSERT INTO menu VALUE ({},'{}',{})".format(num, name, price)
+        self.mycursor.execute(add_query)
+        self.mydb.commit()
+
+    def remove_item(self,num):
+        rem_query = "DELETE FROM menu WHERE item_NO= {}".format(num)
+        self.mycursor.execute(rem_query)
+        self.mydb.commit()
+
+    def show_menu(self):ROM menu"""
+        self.mycursor.execute(read_qu
+        read_query="""SELECT * Fery)
+        data=self.mycursor.fetchall()
+        print("item_NO  |  item  |  price")
+        for i in data:
+            print(i[0]+"  |  "+i[1]+"  |  "+i[2])
+
+
+
+
     # functions for vacancy
     def vacancy_read(self, name):
         query="""SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
