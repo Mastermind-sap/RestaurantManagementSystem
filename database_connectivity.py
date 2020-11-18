@@ -1,6 +1,7 @@
 import mysql.connector
 import data
 
+
 class Database:
     def __init__(self):
         # Creating python and mysql connectivity using mysql.connector library
@@ -9,14 +10,14 @@ class Database:
 
     # checks whether the python and mysql connection has been build properly
     def check_connection(self):
-        if self.mydb :
+        if self.mydb:
             print("Connection successful")
         else:
             print("Connection unsuccessful")
 
     # function to create database
     def create_database(self, database_name, condition="if not exists "):
-        self.mycursor.execute("create database "+condition+database_name)
+        self.mycursor.execute("create database " + condition + database_name)
         self.mydb.commit()
 
     # function to show databases
@@ -26,9 +27,8 @@ class Database:
             print(db)
 
     # function to use database
-    def use_database(self,name):
-        self.mycursor.execute("use "+name)
-
+    def use_database(self, name):
+        self.mycursor.execute("use " + name)
 
     # function to create tables in the database
     def create_table(self):
@@ -50,7 +50,7 @@ class Database:
 
     # function to read values in table
     def read_table(self, tablename, fields="*"):
-        self.mycursor.execute("select "+fields+" from "+tablename)
+        self.mycursor.execute("select " + fields + " from " + tablename)
         myresult = self.mycursor.fetchall()
         for row in myresult:
             print(row)
@@ -61,50 +61,50 @@ class Database:
 
     # function to delete a table
     def delete_table(self, tablename):
-        sql = "drop table "+tablename
+        sql = "drop table " + tablename
         self.mycursor.execute(sql)
         self.mydb.commit()
 
     # function to delete a database
     def delete_database(self, dbname):
-        sql = "drop database "+dbname
+        sql = "drop database " + dbname
         self.mycursor.execute(sql)
         self.mydb.commit()
 
     # functions for manager
 
-    def add_manager(self,id,name,password):
-        query = "INSERT INTO managers VALUE ({},'{}','{}')".format(id,name,password)
+    def add_manager(self, id, name, password):
+        query = "INSERT INTO managers VALUE ({},'{}','{}')".format(id, name, password)
         self.mycursor.execute(query)
         self.mydb.commit()
 
-    def remove_manager(self,id):
+    def remove_manager(self, id):
         query = "DELETE FROM managers WHERE manager_ID= {}".format(id)
         self.mycursor.execute(query)
         self.mydb.commit()
 
-    def login_manager(self, id ,password):
-        query="SELECT manager_ID,manager_password FROM managers"
+    def login_manager(self, id, password):
+        query = "SELECT manager_ID,manager_password FROM managers"
         self.mycursor.execute(query)
-        data=self.mycursor.fetchall()
+        data = self.mycursor.fetchall()
         for i in data:
-            if (id,password)==i:
+            if (id, password) == i:
                 return True
         return False
 
     # functions for employee
 
-    def add_employee(self,id,name,password):
+    def add_employee(self, id, name, password):
         query = "INSERT INTO employees VALUE ({},'{}','{}')".format(id, name, password)
         self.mycursor.execute(query)
         self.mydb.commit()
 
-    def remove_employee(self,id):
+    def remove_employee(self, id):
         query = "DELETE FROM employees WHERE employee_ID= {}".format(id)
         self.mycursor.execute(query)
         self.mydb.commit()
 
-    def login_employee(self, id ,password):
+    def login_employee(self, id, password):
         query = "SELECT employee_ID,employee_password FROM employees"
         self.mycursor.execute(query)
         data = self.mycursor.fetchall()
@@ -115,30 +115,31 @@ class Database:
 
     # functions for menu
 
-    def add_item(self,num,name,price):
-        add_query="INSERT INTO menu VALUE ({},'{}',{})".format(num, name, price)
+    def add_item(self, num, name, price):
+        add_query = "INSERT INTO menu VALUE ({},'{}',{})".format(num, name, price)
         self.mycursor.execute(add_query)
         self.mydb.commit()
 
-    def remove_item(self,num):
+    def remove_item(self, num):
         rem_query = "DELETE FROM menu WHERE item_NO= {}".format(num)
         self.mycursor.execute(rem_query)
+        if self.mycursor:
+            print("ITEM SUCCESSFULLY REMOVED")
+        else:
+            print("ITEM NOT THERE IN MENU ALREADY")
         self.mydb.commit()
 
     def show_menu(self):
-        read_query="""SELECT * FROM menu"""
+        read_query = """SELECT * FROM menu"""
         self.mycursor.execute(read_query)
-        data=self.mycursor.fetchall()
+        data = self.mycursor.fetchall()
         print("item_NO  |  item  |  price")
         for i in data:
-            print(i[0]+"  |  "+i[1]+"  |  "+i[2])
-
-
-
+            print(str(i[0]) + "  |  " + i[1] + "  |  " + str(i[2]))
 
     # functions for vacancy
     def vacancy_read(self, name):
-        query="""SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
+        query = """SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
         self.mycursor.execute(query)
         data = self.mycursor.fetchall()
         return data[0][0]
@@ -155,7 +156,7 @@ class Database:
         self.mycursor.execute("use restaurant;")
 
         # creating table for manager details
-        manager_query="""CREATE TABLE IF NOT EXISTS managers(
+        manager_query = """CREATE TABLE IF NOT EXISTS managers(
                                 manager_ID INTEGER NOT NULL PRIMARY KEY,
                                 manager_name TEXT,
                                 manager_password TEXT)"""
@@ -169,7 +170,7 @@ class Database:
         self.mycursor.execute(employee_query)
 
         # creating table for menu details
-        menu_query="""CREATE TABLE IF NOT EXISTS menu(
+        menu_query = """CREATE TABLE IF NOT EXISTS menu(
                                         item_NO INTEGER NOT NULL PRIMARY KEY,
                                         item TEXT,
                                         price FLOAT)"""
@@ -187,7 +188,7 @@ class Database:
                                                 id INTEGER DEFAULT 1)"""
         self.mycursor.execute(vacancy_query)
 
-        vacant_employee_id_query="""INSERT INTO vacancy (name)
+        vacant_employee_id_query = """INSERT INTO vacancy (name)
                                 SELECT("vacant_employee_id")
                                 WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_employee_id")"""
         self.mycursor.execute(vacant_employee_id_query)

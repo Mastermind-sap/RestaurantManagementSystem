@@ -2,6 +2,7 @@ import database_connectivity
 # package to take masked input for passwords in terminal
 import stdiomask
 
+
 class Employee:
     def __init__(self):
         self.db = database_connectivity.Database()
@@ -10,17 +11,17 @@ class Employee:
     def employee_login(self):
         id = int(input("Employee ID: "))
         passwd = stdiomask.getpass("Password: ", mask="*")
-        if self.db.login_employee(id,passwd):
+        if self.db.login_employee(id, passwd):
             return True
         else:
             return False
 
     def employee_signup(self):
-        id=self.db.vacancy_read("vacant_employee_id")
-        print("Your Employee ID: "+str(id))
-        name=input("Enter name: ")
-        passwd=stdiomask.getpass("Password: ",mask="*")
-        self.db.add_employee(id,name,passwd)
+        id = self.db.vacancy_read("vacant_employee_id")
+        print("Your Employee ID: " + str(id))
+        name = input("Enter name: ")
+        passwd = stdiomask.getpass("Password: ", mask="*")
+        self.db.add_employee(id, name, passwd)
         print("Account created successfully")
         self.db.vacancy_update("vacant_employee_id")
 
