@@ -121,13 +121,17 @@ class Database:
         self.mydb.commit()
 
     def remove_item(self, num):
+        self.mycursor.execute("""SELECT * FROM menu""")
+        original_no_rows = len(self.mycursor.fetchall())
         rem_query = "DELETE FROM menu WHERE item_NO= {}".format(num)
         self.mycursor.execute(rem_query)
-        if self.mycursor:
+        self.mydb.commit()
+        self.mycursor.execute("""SELECT * FROM menu""")
+        final_no_rows = len(self.mycursor.fetchall())
+        if original_no_rows != final_no_rows:
             print("ITEM SUCCESSFULLY REMOVED")
         else:
             print("ITEM NOT THERE IN MENU ALREADY")
-        self.mydb.commit()
 
     def show_menu(self):
         read_query = """SELECT * FROM menu"""
