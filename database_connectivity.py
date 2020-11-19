@@ -119,6 +119,7 @@ class Database:
         add_query = "INSERT INTO menu VALUE ({},'{}',{})".format(num, name, price)
         self.mycursor.execute(add_query)
         self.mydb.commit()
+        print("ITEM SUCCESSFULLY ADDED")
 
     def remove_item(self, num):
         self.mycursor.execute("""SELECT * FROM menu""")
@@ -133,13 +134,25 @@ class Database:
         else:
             print("ITEM NOT THERE IN MENU ALREADY")
 
+    def update_item(self, num, name, price):
+        check_query = """SELECT item_NO FROM menu"""
+        self.mycursor.execute(check_query)
+        item_no_present = self.mycursor.fetchall()
+        if (num,) in item_no_present:
+            update_query = """UPDATE menu SET item='{}',price={} WHERE item_NO= {}""".format(name, price, num)
+            self.mycursor.execute(update_query)
+            self.mydb.commit()
+            print("ITEM UPDATED SUCCESSFULLY")
+        else:
+            print("ITEM NUMBER INVALID! NO ITEM WITH THIS NUMBER PRESENT IN MENU")
+
     def show_menu(self):
         read_query = """SELECT * FROM menu"""
         self.mycursor.execute(read_query)
         data = self.mycursor.fetchall()
-        print("item_NO  |  item  |  price")
+        print("{:<20} | {:^20} | {:>20}".format("item_NO", "item", "price"))
         for i in data:
-            print(str(i[0]) + "  |  " + i[1] + "  |  " + str(i[2]))
+            print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
 
     # functions for vacancy
     def vacancy_read(self, name):

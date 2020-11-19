@@ -41,12 +41,14 @@ class Manager:
                     price = float(input("Enter price of item: "))
                     self.db.add_item(number, name, price)
                     self.db.vacancy_update("vacant_itemNo")
-                    print("ITEM SUCCESSFULLY ADDED")
                 elif int(choice) == 2:
                     number = int(input("Enter item number of the item:"))
                     self.db.remove_item(number)
                 elif int(choice) == 3:
-                    pass
+                    number = int(input("Enter item number:"))
+                    name = input("Enter name of item: ")
+                    price = float(input("Enter price of item: "))
+                    self.db.update_item(number, name, price)
                 elif int(choice) == 4:
                     self.db.show_menu()
                 else:
