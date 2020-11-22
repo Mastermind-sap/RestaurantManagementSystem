@@ -1,7 +1,6 @@
 # package to take masked input for passwords in terminal
 import stdiomask
 
-
 # data to be used to access local sql server
 username = "root"
 password = "mysql"

@@ -92,6 +92,14 @@ class Database:
                 return True
         return False
 
+    def show_manager(self, id):
+        read_query = "SELECT * FROM managers WHERE manager_ID={}".format(id)
+        self.mycursor.execute(read_query)
+        data = self.mycursor.fetchall()
+        print("Manager ID: " + str(data[0][0]))
+        print("Manager name: " + data[0][1])
+        print("Manager password: " + data[0][2])
+
     # functions for employee
 
     def add_employee(self, id, name, password):
@@ -112,6 +120,14 @@ class Database:
             if (id, password) == i:
                 return True
         return False
+
+    def show_employee(self, id):
+        read_query = "SELECT * FROM employees WHERE employee_ID={}".format(id)
+        self.mycursor.execute(read_query)
+        data = self.mycursor.fetchall()
+        print("Employee ID: " + str(data[0][0]))
+        print("Employee name: " + data[0][1])
+        print("Employee password: " + data[0][2])
 
     # functions for menu
 
@@ -154,6 +170,10 @@ class Database:
         for i in data:
             print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
 
+    def delete_menu(self):
+        self.delete_table("menu")
+        print("Menu Deleted!")
+
     # functions for vacancy
     def vacancy_read(self, name):
         query = """SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
@@ -163,6 +183,11 @@ class Database:
 
     def vacancy_update(self, name):
         query = """UPDATE vacancy SET ID =ID + 1 WHERE name = '{}'""".format(name)
+        self.mycursor.execute(query)
+        self.mydb.commit()
+
+    def vacancy_reset(self, name):
+        query = """UPDATE vacancy SET ID =1 WHERE name = '{}'""".format(name)
         self.mycursor.execute(query)
         self.mydb.commit()
 

@@ -8,11 +8,13 @@ class Manager:
     def __init__(self):
         self.db = database_connectivity.Database()
         self.db.use_database("restaurant")
+        self.id = 0
 
     def manager_login(self):
         id = int(input("Manager ID: "))
         passwd = stdiomask.getpass("Password: ", mask="*")
         if self.db.login_manager(id, passwd):
+            self.id = id
             return True
         else:
             return False
@@ -32,6 +34,7 @@ class Manager:
                         2 to remove an item from list,
                         3 to update an item from list,
                         4 to show menu,
+                        5 to delete menu,
                         Any other number to Go back""")
             if choice.isnumeric():
                 if int(choice) == 1:
@@ -51,11 +54,34 @@ class Manager:
                     self.db.update_item(number, name, price)
                 elif int(choice) == 4:
                     self.db.show_menu()
+                elif int(choice) == 5:
+                    self.db.delete_menu()
+                    self.db.vacancy_reset("vacant_itemNo")
+                    self.db.main()
                 else:
                     break
 
     def orders_related(self):
         pass
+
+    def tax_related(self):
+        pass
+
+    def account_related(self):
+        while True:
+            choice = input("""Enter 1 to see your account details,
+            2 to delete your account,
+            Any other number to Go back""")
+            if choice.isnumeric():
+                if int(choice) == 1:
+                    self.db.show_manager(self.id)
+                elif int(choice) == 2:
+                    self.db.remove_manager(self.id)
+                    print("Account deleted")
+                    self.id = 0
+                    return False
+                else:
+                    return True
 
     def main(self):
         while True:
@@ -72,7 +98,8 @@ class Manager:
                         while True:
                             options = input("""Enter 1 for menu-related functions,
                                         2 for orders-related functions,
-                                        3 to Delete Account
+                                        3 for tax-related functions,
+                                        4 for account-related functions,
                                         Any other number to Log Out""")
                             if options.isnumeric():
                                 if int(options) == 1:
@@ -80,8 +107,15 @@ class Manager:
                                 elif int(options) == 2:
                                     self.orders_related()
                                 elif int(options) == 3:
-                                    pass
+                                    self.tax_related()
+                                elif int(options) == 4:
+                                    check = self.account_related()
+                                    if check:
+                                        continue
+                                    else:
+                                        break
                                 else:
+                                    self.id = 0
                                     break
 
                     else:
