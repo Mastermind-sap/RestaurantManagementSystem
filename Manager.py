@@ -65,7 +65,37 @@ class Manager:
         pass
 
     def tax_related(self):
-        pass
+        while True:
+            choice = input("""Enter 1 to add new tax,
+                        2 to remove a tax from list,
+                        3 to update a tax from list,
+                        4 to show all taxes,
+                        5 to delete all taxes,
+                        Any other number to Go back""")
+            if choice.isnumeric():
+                if int(choice) == 1:
+                    number = self.db.vacancy_read("vacant_taxNo")
+                    print("Tax number: " + str(number))
+                    tax = input("Enter name of tax: ")
+                    percent = float(input("Enter tax percent: "))
+                    self.db.add_tax(number, tax, percent)
+                    self.db.vacancy_update("vacant_taxNo")
+                elif int(choice) == 2:
+                    number = int(input("Enter tax number:"))
+                    self.db.remove_tax(number)
+                elif int(choice) == 3:
+                    number = int(input("Enter tax number:"))
+                    tax = input("Enter name of tax: ")
+                    percent = float(input("Enter tax percent: "))
+                    self.db.update_tax(number, tax, percent)
+                elif int(choice) == 4:
+                    self.db.show_tax()
+                elif int(choice) == 5:
+                    self.db.delete_tax()
+                    self.db.vacancy_reset("vacant_taxNo")
+                    self.db.main()
+                else:
+                    break
 
     def account_related(self):
         while True:

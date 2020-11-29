@@ -174,6 +174,51 @@ class Database:
         self.delete_table("menu")
         print("Menu Deleted!")
 
+    # functions for tax
+
+    def add_tax(self, num, tax, percent):
+        add_query = "INSERT INTO tax VALUE ({},'{}',{})".format(num, tax, percent)
+        self.mycursor.execute(add_query)
+        self.mydb.commit()
+        print("TAX SUCCESSFULLY ADDED")
+
+    def remove_tax(self, num):
+        self.mycursor.execute("""SELECT * FROM tax""")
+        original_no_rows = len(self.mycursor.fetchall())
+        rem_query = "DELETE FROM tax WHERE tax_NO= {}".format(num)
+        self.mycursor.execute(rem_query)
+        self.mydb.commit()
+        self.mycursor.execute("""SELECT * FROM tax""")
+        final_no_rows = len(self.mycursor.fetchall())
+        if original_no_rows != final_no_rows:
+            print("TAX SUCCESSFULLY REMOVED")
+        else:
+            print("TAX NOT THERE ALREADY")
+
+    def update_tax(self, num, tax, percent):
+        check_query = """SELECT tax_NO FROM tax"""
+        self.mycursor.execute(check_query)
+        tax_no_present = self.mycursor.fetchall()
+        if (num,) in tax_no_present:
+            update_query = """UPDATE tax SET tax='{}',percent={} WHERE tax_NO= {}""".format(tax, percent, num)
+            self.mycursor.execute(update_query)
+            self.mydb.commit()
+            print("TAX UPDATED SUCCESSFULLY")
+        else:
+            print("TAX NUMBER INVALID! NO TAX WITH THIS NUMBER PRESENT")
+
+    def show_tax(self):
+        read_query = """SELECT * FROM tax"""
+        self.mycursor.execute(read_query)
+        data = self.mycursor.fetchall()
+        print("{:<20} | {:^20} | {:>20}".format("tax_NO", "tax", "percent"))
+        for i in data:
+            print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
+
+    def delete_tax(self):
+        self.delete_table("tax")
+        print("All taxes deleted!")
+
     # functions for vacancy
     def vacancy_read(self, name):
         query = """SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
@@ -220,9 +265,17 @@ class Database:
 
         # creating table for tax details
         tax_query = """CREATE TABLE IF NOT EXISTS tax(
+                                                tax_NO INTEGER NOT NULL PRIMARY KEY,
                                                 tax TEXT,
                                                 percent FLOAT)"""
         self.mycursor.execute(tax_query)
+
+        # creating table for order details
+        order_query = """CREATE TABLE IF NOT EXISTS order_details(
+                                                order_NO INTEGER NOT NULL PRIMARY KEY,
+                                                name TEXT,
+                                                date DATE)"""
+        self.mycursor.execute(order_query)
 
         # creating table for vacancy details
         vacancy_query = """CREATE TABLE IF NOT EXISTS vacancy(
@@ -237,13 +290,25 @@ class Database:
         self.mydb.commit()
 
         vacant_manager_id_query = """INSERT INTO vacancy (name)
-                                        SELECT("vacant_manager_id")
-                                        WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_manager_id")"""
+                                SELECT("vacant_manager_id")
+                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_manager_id")"""
         self.mycursor.execute(vacant_manager_id_query)
         self.mydb.commit()
 
         vacant_itemNo_query = """INSERT INTO vacancy (name)
-                                                SELECT("vacant_itemNo")
-                                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_itemNo")"""
+                                SELECT("vacant_itemNo")
+                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_itemNo")"""
         self.mycursor.execute(vacant_itemNo_query)
+        self.mydb.commit()
+
+        vacant_orderNo_query = """INSERT INTO vacancy (name)
+                                SELECT("vacant_orderNo")
+                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_orderNo")"""
+        self.mycursor.execute(vacant_orderNo_query)
+        self.mydb.commit()
+
+        vacant_taxNo_query = """INSERT INTO vacancy (name)
+                                SELECT("vacant_taxNo")
+                                WHERE NOT EXISTS(SELECT * FROM vacancy WHERE name="vacant_taxNo")"""
+        self.mycursor.execute(vacant_taxNo_query)
         self.mydb.commit()

@@ -13,7 +13,6 @@ class RestaurantManagementSystem:
         self.db.main()
         self.manager = Manager.Manager()
         self.employee = Employee.Employee()
-        pass
 
     def main(self):
         while True:
