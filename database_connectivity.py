@@ -1,5 +1,7 @@
 import mysql.connector
 import data
+import datetime as dt
+import tabulate
 
 
 class Database:
@@ -166,9 +168,11 @@ class Database:
         read_query = """SELECT * FROM menu"""
         self.mycursor.execute(read_query)
         data = self.mycursor.fetchall()
-        print("{:<20} | {:^20} | {:>20}".format("item_NO", "item", "price"))
-        for i in data:
-            print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
+        # print("{:<20} | {:^20} | {:>20}".format("item_NO", "item", "price"))
+        # for i in data:
+        #     print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
+        headers=["item_NO", "item", "price"]
+        print(tabulate.tabulate(data, headers, tablefmt="psql"))
 
     def delete_menu(self):
         self.delete_table("menu")
@@ -211,13 +215,101 @@ class Database:
         read_query = """SELECT * FROM tax"""
         self.mycursor.execute(read_query)
         data = self.mycursor.fetchall()
-        print("{:<20} | {:^20} | {:>20}".format("tax_NO", "tax", "percent"))
-        for i in data:
-            print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
+        # print("{:<20} | {:^20} | {:>20}".format("tax_NO", "tax", "percent"))
+        # for i in data:
+        #     print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
+        headers=["tax_NO", "tax", "percent"]
+        print(tabulate.tabulate(data, headers, tablefmt="psql"))
 
     def delete_tax(self):
         self.delete_table("tax")
         print("All taxes deleted!")
+
+    # functions for orders
+
+    def take_order(self):
+        # reading menu
+        read_menu = """SELECT * FROM menu"""
+        self.mycursor.execute(read_menu)
+        menu_details = self.mycursor.fetchall()
+
+        # creating a dictionary menu with item_NO as key and list of item name and price as value
+        menu = {}
+        for i in menu_details:
+            menu[i[0]] = [i[1], i[2]]
+
+        order_no = self.vacancy_read("vacant_orderNo")
+        print("Order Number:" + str(order_no))
+        date = str(dt.date.today())
+        print("Date: " + date)
+        name = input("Enter customer name:")
+
+        print("Enter item number of the item you want to order \nEnter quit to stop ordering")
+        order = ""
+        sl = 1
+        while True:
+            item_num = input("Enter item number: ")
+            if item_num.isnumeric():
+                if int(item_num) in menu.keys():
+                    quantity = int(input("Enter quantity of " + menu[int(item_num)][0] + " you want to order: "))
+                    if quantity > 0:
+                        order += """({},'{}',{},{},{}),""".format(sl, menu[int(item_num)][0], menu[int(item_num)][1],
+                                                                  quantity, menu[int(item_num)][1] * quantity)
+                        sl += 1
+                    else:
+                        print("Invalid quantity \nQuantity of item cannot be zero or negative")
+                else:
+                    print("Item number does not exist in menu")
+            elif item_num.lower() == "quit":
+                if len(order) == 0:
+                    print("Nothing ordered \nDeleting order progress")
+                    return False
+                else:
+                    # inserting order details in order_details table
+                    insert_order_details = "INSERT INTO order_details VALUE ({},'{}','{}')".format(order_no, name, date)
+                    self.mycursor.execute(insert_order_details)
+                    self.mydb.commit()
+
+                    # creating order table
+                    order_table_create = """CREATE TABLE IF NOT EXISTS order{}(
+                    Sl_no INTEGER NOT NULL PRIMARY KEY,
+                    item TEXT,
+                    price FLOAT,
+                    quantity INTEGER,
+                    amount FLOAT);""".format(order_no)
+                    self.mycursor.execute(order_table_create)
+
+                    # inserting order in order table
+                    insert_order = """INSERT INTO order{} VALUES {};""".format(order_no, order[:-1])
+                    self.mycursor.execute(insert_order)
+                    self.mydb.commit()
+
+                    self.vacancy_update("vacant_orderNo")
+                    print("Order placed successfully!")
+                    self.print_bill(order_no)
+                    return True
+            else:
+                print("Invalid Entry")
+
+    def print_bill(self,orderno):
+        try:
+            order_details_query="""SELECT * FROM order_details WHERE order_NO={}""".format(orderno)
+            self.mycursor.execute(order_details_query)
+            order_details=self.mycursor.fetchall()
+            print("\t\t\t***INVOICE***")
+            print("Order Number: "+str(order_details[0][0]))
+            print("Name of customer: "+order_details[0][1])
+            print("Date: "+str(order_details[0][2]))
+            order_query = """SELECT * FROM order{}""".format(orderno)
+            self.mycursor.execute(order_query)
+            order= self.mycursor.fetchall()
+            headers=["Sl_no","Item","Price","Quantity","Amount"]
+            print(tabulate.tabulate(order, headers, tablefmt="psql"))
+            return True
+        except Exception:
+            print("Invalid order number")
+        return False
+
 
     # functions for vacancy
     def vacancy_read(self, name):

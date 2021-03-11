@@ -28,7 +28,23 @@ class Employee:
         self.db.vacancy_update("vacant_employee_id")
 
     def orders_related(self):
-        pass
+        while True:
+            choice = input("""Enter 1 to take order,
+                        2 to print bill of previous orders,
+                        Any other number to Go back""")
+            if choice.isnumeric():
+                if int(choice) == 1:
+                    self.db.take_order()
+                elif int(choice) == 2:
+                    while True:
+                        order_number=input("Enter order number: ")
+                        if order_number.isnumeric():
+                            self.db.print_bill(int(order_number))
+                            break
+                        else:
+                            print("Invalid order number\nOrder number can be only integer")
+                else:
+                    break
 
     def account_related(self):
         while True:
