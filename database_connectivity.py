@@ -171,7 +171,7 @@ class Database:
         # print("{:<20} | {:^20} | {:>20}".format("item_NO", "item", "price"))
         # for i in data:
         #     print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
-        headers=["item_NO", "item", "price"]
+        headers = ["item_NO", "item", "price"]
         print(tabulate.tabulate(data, headers, tablefmt="psql"))
 
     def delete_menu(self):
@@ -218,7 +218,7 @@ class Database:
         # print("{:<20} | {:^20} | {:>20}".format("tax_NO", "tax", "percent"))
         # for i in data:
         #     print("{:<20} | {:^20} | {:>20}".format(i[0], i[1], i[2]))
-        headers=["tax_NO", "tax", "percent"]
+        headers = ["tax_NO", "tax", "percent"]
         print(tabulate.tabulate(data, headers, tablefmt="psql"))
 
     def delete_tax(self):
@@ -291,25 +291,36 @@ class Database:
             else:
                 print("Invalid Entry")
 
-    def print_bill(self,orderno):
+    def print_bill(self, orderno):
         try:
-            order_details_query="""SELECT * FROM order_details WHERE order_NO={}""".format(orderno)
+            order_details_query = """SELECT * FROM order_details WHERE order_NO={}""".format(orderno)
             self.mycursor.execute(order_details_query)
-            order_details=self.mycursor.fetchall()
+            order_details = self.mycursor.fetchall()
             print("\t\t\t***INVOICE***")
-            print("Order Number: "+str(order_details[0][0]))
-            print("Name of customer: "+order_details[0][1])
-            print("Date: "+str(order_details[0][2]))
+            print("Order Number: " + str(order_details[0][0]))
+            print("Name of customer: " + order_details[0][1])
+            print("Date: " + str(order_details[0][2]))
             order_query = """SELECT * FROM order{}""".format(orderno)
             self.mycursor.execute(order_query)
-            order= self.mycursor.fetchall()
-            headers=["Sl_no","Item","Price","Quantity","Amount"]
+            order = self.mycursor.fetchall()
+            subtotal_query = """SELECT SUM(amount) FROM order{}""".format(orderno)
+            self.mycursor.execute(subtotal_query)
+            subtotal = self.mycursor.fetchall()[0][0]
+            order.append(["", "", "", "Subtotal: ", subtotal])
+            tax_query = """SELECT * FROM tax"""
+            self.mycursor.execute(tax_query)
+            tax = self.mycursor.fetchall()
+            total = subtotal
+            for i in tax:
+                order.append(["", "", "", i[1] + ": ", str(i[2]) + "%"])
+                total -= (i[2] / 100.0) * total
+            order.append(["", "", "", "Total: ", total])
+            headers = ["Sl_no", "Item", "Price", "Quantity", "Amount"]
             print(tabulate.tabulate(order, headers, tablefmt="psql"))
             return True
         except Exception:
             print("Invalid order number")
         return False
-
 
     # functions for vacancy
     def vacancy_read(self, name):

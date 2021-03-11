@@ -37,7 +37,7 @@ class Employee:
                     self.db.take_order()
                 elif int(choice) == 2:
                     while True:
-                        order_number=input("Enter order number: ")
+                        order_number = input("Enter order number: ")
                         if order_number.isnumeric():
                             self.db.print_bill(int(order_number))
                             break
