@@ -244,7 +244,7 @@ class Database:
         print("Date: " + date)
         name = input("Enter customer name:")
 
-        print("Enter item number of the item you want to order \nEnter quit to stop ordering")
+        print("""Enter item number of the item you want to order\nEnter menu to see menu while ordering \nEnter quit to stop ordering""")
         order = ""
         sl = 1
         while True:
@@ -260,6 +260,8 @@ class Database:
                         print("Invalid quantity \nQuantity of item cannot be zero or negative")
                 else:
                     print("Item number does not exist in menu")
+            elif item_num.lower() == "menu":
+                self.show_menu()
             elif item_num.lower() == "quit":
                 if len(order) == 0:
                     print("Nothing ordered \nDeleting order progress")
