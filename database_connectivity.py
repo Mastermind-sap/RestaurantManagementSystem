@@ -244,7 +244,8 @@ class Database:
         print("Date: " + date)
         name = input("Enter customer name:")
 
-        print("""Enter item number of the item you want to order\nEnter menu to see menu while ordering \nEnter quit to stop ordering""")
+        print(
+            """Enter item number of the item you want to order\nEnter menu to see menu while ordering \nEnter quit to stop ordering""")
         order = ""
         sl = 1
         while True:
@@ -323,6 +324,68 @@ class Database:
         except Exception:
             print("Invalid order number")
         return False
+
+    def view_orders_by_date(self, date):
+        order_details_query = """SELECT * FROM order_details WHERE date='{}'""".format(date)
+        self.mycursor.execute(order_details_query)
+        order_details = self.mycursor.fetchall()
+        if len(order_details) != 0:
+            headers = ["Order Number", "Name of customer", "Date"]
+            print(tabulate.tabulate(order_details, headers, tablefmt="psql"))
+        else:
+            print("No orders placed on " + date)
+
+    def view_orders_by_name_exact(self, name):
+        order_details_query = """SELECT * FROM order_details WHERE name='{}'""".format(name)
+        self.mycursor.execute(order_details_query)
+        order_details = self.mycursor.fetchall()
+        if len(order_details) != 0:
+            headers = ["Order Number", "Name of customer", "Date"]
+            print(tabulate.tabulate(order_details, headers, tablefmt="psql"))
+        else:
+            print("No orders placed by the name " + name)
+
+    def view_orders_by_name_part(self, part):
+        order_details_query = """SELECT * FROM order_details WHERE name LIKE '%{}%'""".format(part)
+        self.mycursor.execute(order_details_query)
+        order_details = self.mycursor.fetchall()
+        if len(order_details) != 0:
+            headers = ["Order Number", "Name of customer", "Date"]
+            print(tabulate.tabulate(order_details, headers, tablefmt="psql"))
+        else:
+            print("No orders found")
+
+    def view_orders_by_name_start(self, start):
+        order_details_query = """SELECT * FROM order_details WHERE name LIKE '{}%'""".format(start)
+        self.mycursor.execute(order_details_query)
+        order_details = self.mycursor.fetchall()
+        if len(order_details) != 0:
+            headers = ["Order Number", "Name of customer", "Date"]
+            print(tabulate.tabulate(order_details, headers, tablefmt="psql"))
+        else:
+            print("No orders found")
+
+    def view_orders_by_ordernum(self, orderno):
+        order_details_query = """SELECT * FROM order_details WHERE order_NO={}""".format(orderno)
+        self.mycursor.execute(order_details_query)
+        order_details = self.mycursor.fetchall()
+        if len(order_details) != 0:
+            headers = ["Order Number", "Name of customer", "Date"]
+            print(tabulate.tabulate(order_details, headers, tablefmt="psql"))
+        else:
+            print("No orders with the order number " + str(orderno))
+
+    def delete_order(self,orderno):
+        try:
+            delete_order="""DROP TABLE order{}""".format(orderno)
+            self.mycursor.execute(delete_order)
+            self.mydb.commit()
+            delete_order_details="""DELETE FROM order_details WHERE order_NO={}""".format(orderno)
+            self.mycursor.execute(delete_order_details)
+            self.mydb.commit()
+            print("Records of order number "+str(orderno)+" deleted!")
+        except Exception:
+            print("Order number "+str(orderno)+" does not exist")
 
     # functions for vacancy
     def vacancy_read(self, name):

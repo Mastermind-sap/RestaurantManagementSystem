@@ -62,7 +62,86 @@ class Manager:
                     break
 
     def orders_related(self):
-        pass
+        while True:
+            choice = input("""Enter 1 to view list of orders,
+            2 to print bill of previous orders,
+            3 to delete records of any previous order,
+            Any other number to Go back""")
+            if choice.isnumeric():
+                if int(choice) == 1:
+                    while True:
+                        choice1 = input("""Enter 1 to view list of orders by date of order,
+                                    2 to view list of orders by exact name of customer,
+                                    3 to view list of orders by part of the name of customer,
+                                    4 to view list of orders by starting of the name of customer,
+                                    5 to view order by order number,
+                                    Any other number to Go back""")
+                        if choice1.isnumeric():
+                            if int(choice1) == 1:
+                                date = ""
+                                while True:
+                                    yr = input("Enter year of order(0000-9999): ")
+                                    if yr.isnumeric() and len(yr) == 4:
+                                        date += yr
+                                        break
+                                    else:
+                                        print("Invalid year")
+                                        print("Enter the full year in four digit")
+                                while True:
+                                    mt = input("Enter month of order(01-12): ")
+                                    if mt.isnumeric() and int(mt) in range(1, 13):
+                                        date += "-" + mt
+                                        break
+                                    else:
+                                        print("Invalid month\nEnter month in digits")
+                                while True:
+                                    dt = input("Enter date of order(1-31): ")
+                                    if dt.isnumeric() and int(dt) in range(1, 32):
+                                        date += "-" + dt
+                                        break
+                                    else:
+                                        print("Invalid date")
+                                self.db.view_orders_by_date(date)
+                            elif int(choice1) == 2:
+                                name = input("Enter name of the customer:")
+                                self.db.view_orders_by_name_exact(name)
+                            elif int(choice1) == 3:
+                                pt = input("Enter part of the name of the customer:")
+                                self.db.view_orders_by_name_part(pt)
+                            elif int(choice1) == 4:
+                                st = input("Enter start of the name of the customer:")
+                                self.db.view_orders_by_name_start(st)
+                            elif int(choice1) == 5:
+                                while True:
+                                    order_number = input("Enter order number: ")
+                                    if order_number.isnumeric():
+                                        self.db.view_orders_by_ordernum(int(order_number))
+                                        break
+                                    else:
+                                        print("Invalid order number\nOrder number can be only integer")
+                            else:
+                                break
+
+                elif int(choice) == 2:
+                    while True:
+                        order_number = input("Enter order number: ")
+                        if order_number.isnumeric():
+                            self.db.print_bill(int(order_number))
+                            break
+                        else:
+                            print("Invalid order number\nOrder number can be only integer")
+
+                elif int(choice) == 3:
+                    while True:
+                        order_number = input("Enter order number: ")
+                        if order_number.isnumeric():
+                            self.db.delete_order(int(order_number))
+                            break
+                        else:
+                            print("Invalid order number\nOrder number can be only integer")
+
+                else:
+                    break
 
     def tax_related(self):
         while True:
