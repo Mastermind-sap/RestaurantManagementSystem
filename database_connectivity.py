@@ -405,10 +405,10 @@ class Database:
         self.mydb.commit()
 
     def main(self):
-        # creating database "restaurant" if it is not created already before
-        self.mycursor.execute("create database if not exists restaurant")
+        # creating database restaurant if it is not created already before
+        self.mycursor.execute("create database if not exists "+data.restaurant)
         # using database restaurant
-        self.mycursor.execute("use restaurant;")
+        self.mycursor.execute("use "+data.restaurant+";")
 
         # creating table for manager details
         manager_query = """CREATE TABLE IF NOT EXISTS managers(

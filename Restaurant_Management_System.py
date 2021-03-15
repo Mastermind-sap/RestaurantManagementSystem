@@ -11,20 +11,20 @@ class RestaurantManagementSystem:
         self.db = database_connectivity.Database()
         self.db.check_connection()
         self.db.main()
-        self.manager = Manager.Manager()
-        self.employee = Employee.Employee()
 
     def main(self):
         while True:
-            print("Restaurant Management System")
+            print(data.restaurant.capitalize()+" Management System")
             choice = input("""Enter 1 for Manager
             2 for Employee
             Any other number to exit""")
             if choice.isnumeric():
                 if int(choice) == 1:
-                    self.manager.main()
+                    manager = Manager.Manager()
+                    manager.main()
                 elif int(choice) == 2:
-                    self.employee.main()
+                    employee = Employee.Employee()
+                    employee.main()
                     pass
                 else:
                     break

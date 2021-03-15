@@ -1,13 +1,14 @@
 import database_connectivity
 # package to take masked input for passwords in terminal
 import stdiomask
+import data
 
 
 class Manager:
 
     def __init__(self):
         self.db = database_connectivity.Database()
-        self.db.use_database("restaurant")
+        self.db.use_database(data.restaurant)
         self.id = 0
 
     def manager_login(self):
