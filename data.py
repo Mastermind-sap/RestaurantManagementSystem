@@ -1,20 +1,22 @@
 # package to take masked input for passwords in terminal
 import stdiomask
 
-# package to display terminal images
-#import timg
+# Library to display terminal images
+# import timg
 
-# package to print a colourful header
+# Library to print a colourful header
 import cfonts
 
-
 # data to be used to access local sql server
+# global variables
 username = "root"
 password = "mysql"
 restaurant = "restaurant"
 
 
 class Data:
+
+    # init method or constructor to initialise the stuffs related to this class
     def __init__(self):
         # Starting of the output
 
@@ -25,12 +27,13 @@ class Data:
         # obj.render(timg.ASCIIMethod)
         # print()
 
+        # A header for the program created with the library cfonts
         cfonts.say("Restaurant", font='chrome', colors=['candy', 'candy', 'candy'], align='center', space=False)
         cfonts.say("Management", font='chrome', colors=['candy', 'candy', 'candy'], align='center', space=False)
         cfonts.say("System", font='chrome', colors=['candy', 'candy', 'candy'], align='center', space=False)
         print()
 
-        # Taking user and password to be used to create python-sql connectivity
+        # Taking username,password and restaurant name to be used to create python-sql connectivity
         print("DATABASE AUTHENTICATION")
         user = input("Username: ")
         if len(user) != 0:

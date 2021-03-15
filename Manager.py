@@ -1,17 +1,22 @@
+# importing all the necessary python files
 import database_connectivity
-# package to take masked input for passwords in terminal
-import stdiomask
 import data
+
+# Library to take masked input for passwords in terminal
+import stdiomask
 
 
 class Manager:
 
+    # init method or constructor to initialise the stuffs related to this class
     def __init__(self):
         self.db = database_connectivity.Database()
         self.db.use_database(data.restaurant)
         self.id = 0
 
+    # Function called when a manager is to login to his/her account
     def manager_login(self):
+        # Validating manager credentials from the database
         id = int(input("Manager ID: "))
         passwd = stdiomask.getpass("Password: ", mask="*")
         if self.db.login_manager(id, passwd):
@@ -20,6 +25,7 @@ class Manager:
         else:
             return False
 
+    # Method called when a manager is to create a new account
     def manager_signup(self):
         id = self.db.vacancy_read("vacant_manager_id")
         print("Your Manager ID: " + str(id))
@@ -29,6 +35,7 @@ class Manager:
         print("Account created successfully")
         self.db.vacancy_update("vacant_manager_id")
 
+    # Method which is called when a manager selects menu related functions
     def menu_related(self):
         while True:
             choice = input("""Enter 1 to add an item to menu,
@@ -62,6 +69,7 @@ class Manager:
                 else:
                     break
 
+    # Method which is called when a manager selects order related functions
     def orders_related(self):
         while True:
             choice = input("""Enter 1 to view list of orders,
@@ -144,6 +152,7 @@ class Manager:
                 else:
                     break
 
+    # Method which is called when a manager selects tax related functions
     def tax_related(self):
         while True:
             choice = input("""Enter 1 to add new tax,
@@ -177,6 +186,7 @@ class Manager:
                 else:
                     break
 
+    # Method which is called when a manager selects account related functions
     def account_related(self):
         while True:
             choice = input("""Enter 1 to see your account details,
@@ -193,6 +203,7 @@ class Manager:
                 else:
                     return True
 
+    # Main method
     def main(self):
         while True:
             print("MANAGER")

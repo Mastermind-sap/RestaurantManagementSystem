@@ -1,16 +1,20 @@
+# importing all the necessary python files
 import database_connectivity
-# package to take masked input for passwords in terminal
-import stdiomask
 import data
+
+# Library to take masked input for passwords in terminal
+import stdiomask
 
 
 class Employee:
 
+    # init method or constructor to initialise the stuffs related to this class
     def __init__(self):
         self.db = database_connectivity.Database()
         self.db.use_database(data.restaurant)
         self.id = 0
 
+    # Function called when a employee is to login to his/her account
     def employee_login(self):
         id = int(input("Employee ID: "))
         passwd = stdiomask.getpass("Password: ", mask="*")
@@ -20,6 +24,7 @@ class Employee:
         else:
             return False
 
+    # Method called when a employee is to create a new account
     def employee_signup(self):
         id = self.db.vacancy_read("vacant_employee_id")
         print("Your Employee ID: " + str(id))
@@ -29,6 +34,7 @@ class Employee:
         print("Account created successfully")
         self.db.vacancy_update("vacant_employee_id")
 
+    # Method which is called when a employee selects order related functions
     def orders_related(self):
         while True:
             choice = input("""Enter 1 to take order,
@@ -48,6 +54,7 @@ class Employee:
                 else:
                     break
 
+    # Method which is called when a employee selects account related functions
     def account_related(self):
         while True:
             choice = input("""Enter 1 to see your account details,
@@ -64,6 +71,7 @@ class Employee:
                 else:
                     return True
 
+    # Main method
     def main(self):
         while True:
             print("EMPLOYEE")

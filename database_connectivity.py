@@ -1,10 +1,16 @@
+# Library imported that is used to make sql connection
 import mysql.connector
+# Importing data.py
 import data
+# Library used to take system date
 import datetime as dt
+# Library to print well designed tables
 import tabulate
 
 
 class Database:
+
+    # init method or constructor to initialise the stuffs related to this class
     def __init__(self):
         # Creating python and mysql connectivity using mysql.connector library
         self.mydb = mysql.connector.connect(host="localhost", user=data.username, passwd=data.password)
@@ -17,74 +23,61 @@ class Database:
         else:
             print("Connection unsuccessful")
 
-    # function to create database
+    # Method to create database
     def create_database(self, database_name, condition="if not exists "):
         self.mycursor.execute("create database " + condition + database_name)
         self.mydb.commit()
 
-    # function to show databases
+    # Method to show databases
     def show_databases(self):
         self.mycursor.execute("show databases")
         for db in self.mycursor:
             print(db)
 
-    # function to use database
+    # Method to use database
     def use_database(self, name):
         self.mycursor.execute("use " + name)
 
-    # function to create tables in the database
-    def create_table(self):
-        pass
-
-    # function to show tables in the database
+    # Method to show tables in the database
     def show_tables(self):
         self.mycursor.execute("show tables")
         for i in self.mycursor:
             print(i)
 
-    # function to insert values in table
-    def insert_values(self):
-        pass
-
-    # function to delete values in table
-    def delete_values(self):
-        pass
-
-    # function to read values in table
+    # Method to read values in table
     def read_table(self, tablename, fields="*"):
         self.mycursor.execute("select " + fields + " from " + tablename)
         myresult = self.mycursor.fetchall()
         for row in myresult:
             print(row)
 
-    # function to update values in table
-    def update(self):
-        pass
-
-    # function to delete a table
+    # Method to delete a table
     def delete_table(self, tablename):
         sql = "drop table " + tablename
         self.mycursor.execute(sql)
         self.mydb.commit()
 
-    # function to delete a database
+    # Method to delete a database
     def delete_database(self, dbname):
         sql = "drop database " + dbname
         self.mycursor.execute(sql)
         self.mydb.commit()
 
-    # functions for manager
+    # Methods for manager
 
+    # Method to add manager details while creating a new account
     def add_manager(self, id, name, password):
         query = "INSERT INTO managers VALUE ({},'{}','{}')".format(id, name, password)
         self.mycursor.execute(query)
         self.mydb.commit()
 
+    # Method to delete manager details while deleting the account
     def remove_manager(self, id):
         query = "DELETE FROM managers WHERE manager_ID= {}".format(id)
         self.mycursor.execute(query)
         self.mydb.commit()
 
+    # Method to check credentials of the manager while logging in
     def login_manager(self, id, password):
         query = "SELECT manager_ID,manager_password FROM managers"
         self.mycursor.execute(query)
@@ -94,6 +87,7 @@ class Database:
                 return True
         return False
 
+    # Method to display account details
     def show_manager(self, id):
         read_query = "SELECT * FROM managers WHERE manager_ID={}".format(id)
         self.mycursor.execute(read_query)
@@ -102,18 +96,21 @@ class Database:
         print("Manager name: " + data[0][1])
         print("Manager password: " + data[0][2])
 
-    # functions for employee
+    # Methods for employee
 
+    # Method to add employee details while creating a new account
     def add_employee(self, id, name, password):
         query = "INSERT INTO employees VALUE ({},'{}','{}')".format(id, name, password)
         self.mycursor.execute(query)
         self.mydb.commit()
 
+    # Method to delete employee details while deleting the account
     def remove_employee(self, id):
         query = "DELETE FROM employees WHERE employee_ID= {}".format(id)
         self.mycursor.execute(query)
         self.mydb.commit()
 
+    # Method to check credentials of the employee while logging in
     def login_employee(self, id, password):
         query = "SELECT employee_ID,employee_password FROM employees"
         self.mycursor.execute(query)
@@ -123,6 +120,7 @@ class Database:
                 return True
         return False
 
+    # Method to display account details
     def show_employee(self, id):
         read_query = "SELECT * FROM employees WHERE employee_ID={}".format(id)
         self.mycursor.execute(read_query)
@@ -131,14 +129,16 @@ class Database:
         print("Employee name: " + data[0][1])
         print("Employee password: " + data[0][2])
 
-    # functions for menu
+    # Methods for menu
 
+    # Method to add item to menu
     def add_item(self, num, name, price):
         add_query = "INSERT INTO menu VALUE ({},'{}',{})".format(num, name, price)
         self.mycursor.execute(add_query)
         self.mydb.commit()
         print("ITEM SUCCESSFULLY ADDED")
 
+    # Method to remove item from menu
     def remove_item(self, num):
         self.mycursor.execute("""SELECT * FROM menu""")
         original_no_rows = len(self.mycursor.fetchall())
@@ -152,6 +152,7 @@ class Database:
         else:
             print("ITEM NOT THERE IN MENU ALREADY")
 
+    # Method to update item details
     def update_item(self, num, name, price):
         check_query = """SELECT item_NO FROM menu"""
         self.mycursor.execute(check_query)
@@ -164,6 +165,7 @@ class Database:
         else:
             print("ITEM NUMBER INVALID! NO ITEM WITH THIS NUMBER PRESENT IN MENU")
 
+    # Method to show menu
     def show_menu(self):
         read_query = """SELECT * FROM menu"""
         self.mycursor.execute(read_query)
@@ -174,18 +176,21 @@ class Database:
         headers = ["item_NO", "item", "price"]
         print(tabulate.tabulate(data, headers, tablefmt="psql"))
 
+    # Method to delete existing menu
     def delete_menu(self):
         self.delete_table("menu")
         print("Menu Deleted!")
 
-    # functions for tax
+    # Methods for tax
 
+    # Method to add tax
     def add_tax(self, num, tax, percent):
         add_query = "INSERT INTO tax VALUE ({},'{}',{})".format(num, tax, percent)
         self.mycursor.execute(add_query)
         self.mydb.commit()
         print("TAX SUCCESSFULLY ADDED")
 
+    # Method to remove tax
     def remove_tax(self, num):
         self.mycursor.execute("""SELECT * FROM tax""")
         original_no_rows = len(self.mycursor.fetchall())
@@ -199,6 +204,7 @@ class Database:
         else:
             print("TAX NOT THERE ALREADY")
 
+    # Method to update tax
     def update_tax(self, num, tax, percent):
         check_query = """SELECT tax_NO FROM tax"""
         self.mycursor.execute(check_query)
@@ -211,6 +217,7 @@ class Database:
         else:
             print("TAX NUMBER INVALID! NO TAX WITH THIS NUMBER PRESENT")
 
+    # Method to show all taxes
     def show_tax(self):
         read_query = """SELECT * FROM tax"""
         self.mycursor.execute(read_query)
@@ -221,12 +228,14 @@ class Database:
         headers = ["tax_NO", "tax", "percent"]
         print(tabulate.tabulate(data, headers, tablefmt="psql"))
 
+    # Method to delete existing tax
     def delete_tax(self):
         self.delete_table("tax")
         print("All taxes deleted!")
 
-    # functions for orders
+    # Methods for orders
 
+    # Method to take new order
     def take_order(self):
         # reading menu
         read_menu = """SELECT * FROM menu"""
@@ -294,6 +303,7 @@ class Database:
             else:
                 print("Invalid Entry")
 
+    # Method to print bill of previous order
     def print_bill(self, orderno):
         try:
             order_details_query = """SELECT * FROM order_details WHERE order_NO={}""".format(orderno)
@@ -325,6 +335,7 @@ class Database:
             print("Invalid order number")
         return False
 
+    # Method to view previous orders filtered by date
     def view_orders_by_date(self, date):
         order_details_query = """SELECT * FROM order_details WHERE date='{}'""".format(date)
         self.mycursor.execute(order_details_query)
@@ -335,6 +346,7 @@ class Database:
         else:
             print("No orders placed on " + date)
 
+    # Method to view previous orders filtered by name
     def view_orders_by_name_exact(self, name):
         order_details_query = """SELECT * FROM order_details WHERE name='{}'""".format(name)
         self.mycursor.execute(order_details_query)
@@ -345,6 +357,7 @@ class Database:
         else:
             print("No orders placed by the name " + name)
 
+    # Method to view previous orders filtered by name
     def view_orders_by_name_part(self, part):
         order_details_query = """SELECT * FROM order_details WHERE name LIKE '%{}%'""".format(part)
         self.mycursor.execute(order_details_query)
@@ -355,6 +368,7 @@ class Database:
         else:
             print("No orders found")
 
+    # Method to view previous orders filtered by name
     def view_orders_by_name_start(self, start):
         order_details_query = """SELECT * FROM order_details WHERE name LIKE '{}%'""".format(start)
         self.mycursor.execute(order_details_query)
@@ -365,6 +379,7 @@ class Database:
         else:
             print("No orders found")
 
+    # Method to view previous orders by unique order number
     def view_orders_by_ordernum(self, orderno):
         order_details_query = """SELECT * FROM order_details WHERE order_NO={}""".format(orderno)
         self.mycursor.execute(order_details_query)
@@ -375,77 +390,83 @@ class Database:
         else:
             print("No orders with the order number " + str(orderno))
 
-    def delete_order(self,orderno):
+    # Method to delete order details from database
+    def delete_order(self, orderno):
         try:
-            delete_order="""DROP TABLE order{}""".format(orderno)
+            delete_order = """DROP TABLE order{}""".format(orderno)
             self.mycursor.execute(delete_order)
             self.mydb.commit()
-            delete_order_details="""DELETE FROM order_details WHERE order_NO={}""".format(orderno)
+            delete_order_details = """DELETE FROM order_details WHERE order_NO={}""".format(orderno)
             self.mycursor.execute(delete_order_details)
             self.mydb.commit()
-            print("Records of order number "+str(orderno)+" deleted!")
+            print("Records of order number " + str(orderno) + " deleted!")
         except Exception:
-            print("Order number "+str(orderno)+" does not exist")
+            print("Order number " + str(orderno) + " does not exist")
 
-    # functions for vacancy
+    # Methods for vacancy
+
+    # Method to read vacant ids
     def vacancy_read(self, name):
         query = """SELECT ID FROM vacancy WHERE name = '{}'""".format(name)
         self.mycursor.execute(query)
         data = self.mycursor.fetchall()
         return data[0][0]
 
+    # Method to increment vacant id by 1
     def vacancy_update(self, name):
         query = """UPDATE vacancy SET ID =ID + 1 WHERE name = '{}'""".format(name)
         self.mycursor.execute(query)
         self.mydb.commit()
 
+    # Method to reset vacant ids to 1
     def vacancy_reset(self, name):
         query = """UPDATE vacancy SET ID =1 WHERE name = '{}'""".format(name)
         self.mycursor.execute(query)
         self.mydb.commit()
 
+    # Main method used to set up the entire database if not done before
     def main(self):
-        # creating database restaurant if it is not created already before
-        self.mycursor.execute("create database if not exists "+data.restaurant)
-        # using database restaurant
-        self.mycursor.execute("use "+data.restaurant+";")
+        # Creating database restaurant if it is not created already before
+        self.mycursor.execute("create database if not exists " + data.restaurant)
+        # Using database restaurant
+        self.mycursor.execute("use " + data.restaurant + ";")
 
-        # creating table for manager details
+        # Creating table for manager details
         manager_query = """CREATE TABLE IF NOT EXISTS managers(
                                 manager_ID INTEGER NOT NULL PRIMARY KEY,
                                 manager_name TEXT,
                                 manager_password TEXT)"""
         self.mycursor.execute(manager_query)
 
-        # creating table for employee details
+        # Creating table for employee details
         employee_query = """CREATE TABLE IF NOT EXISTS employees(
                                         employee_ID INTEGER NOT NULL PRIMARY KEY,
                                         employee_name TEXT,
                                         employee_password TEXT)"""
         self.mycursor.execute(employee_query)
 
-        # creating table for menu details
+        # Creating table for menu details
         menu_query = """CREATE TABLE IF NOT EXISTS menu(
                                         item_NO INTEGER NOT NULL PRIMARY KEY,
                                         item TEXT,
                                         price FLOAT)"""
         self.mycursor.execute(menu_query)
 
-        # creating table for tax details
+        # Creating table for tax details
         tax_query = """CREATE TABLE IF NOT EXISTS tax(
                                                 tax_NO INTEGER NOT NULL PRIMARY KEY,
                                                 tax TEXT,
                                                 percent FLOAT)"""
         self.mycursor.execute(tax_query)
 
-        # creating table for order details
+        # Creating table for order details
         order_query = """CREATE TABLE IF NOT EXISTS order_details(
                                                 order_NO INTEGER NOT NULL PRIMARY KEY,
                                                 name TEXT,
                                                 date DATE)"""
         self.mycursor.execute(order_query)
 
-        # creating table for vacancy details
+        # Creating table for vacancy details
         vacancy_query = """CREATE TABLE IF NOT EXISTS vacancy(
                                                 name TEXT,
                                                 id INTEGER DEFAULT 1)"""
