@@ -24,7 +24,7 @@ class RestaurantManagementSystem:
         # Endless while loop of which runs throught the execution of the program
         while True:
             # Printing the restaurant name
-            print(data.restaurant.capitalize() + " Management System")
+            print(data.restaurant.capitalize() + " Restaurant Management System")
             # Taking user input to whether he/she wants to continue as a manager or an employee
             # or wants to quit the program
             choice = input("""Enter 1 for Manager

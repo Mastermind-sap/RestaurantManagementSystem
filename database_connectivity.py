@@ -13,8 +13,12 @@ class Database:
     # init method or constructor to initialise the stuffs related to this class
     def __init__(self):
         # Creating python and mysql connectivity using mysql.connector library
-        self.mydb = mysql.connector.connect(host="localhost", user=data.username, passwd=data.password)
-        self.mycursor = self.mydb.cursor()
+        try:
+            self.mydb = mysql.connector.connect(host="localhost", user=data.username, passwd=data.password)
+            self.mycursor = self.mydb.cursor()
+        except Exception as e:
+            print("Username or password entered is incorrect")
+            self.mydb=False
 
     # checks whether the python and mysql connection has been build properly
     def check_connection(self):
@@ -22,6 +26,7 @@ class Database:
             print("Connection successful")
         else:
             print("Connection unsuccessful")
+            exit()
 
     # Method to create database
     def create_database(self, database_name, condition="if not exists "):
@@ -261,13 +266,19 @@ class Database:
             item_num = input("Enter item number: ")
             if item_num.isnumeric():
                 if int(item_num) in menu.keys():
-                    quantity = int(input("Enter quantity of " + menu[int(item_num)][0] + " you want to order: "))
-                    if quantity > 0:
-                        order += """({},'{}',{},{},{}),""".format(sl, menu[int(item_num)][0], menu[int(item_num)][1],
-                                                                  quantity, menu[int(item_num)][1] * quantity)
-                        sl += 1
-                    else:
-                        print("Invalid quantity \nQuantity of item cannot be zero or negative")
+                    while True:
+                        quantity = input("Enter quantity of " + menu[int(item_num)][0] + " you want to order: ")
+                        if quantity.isnumeric():
+                            if quantity > 0:
+                                order += """({},'{}',{},{},{}),""".format(sl, menu[int(item_num)][0], menu[int(item_num)][1],
+                                                                          quantity, menu[int(item_num)][1] * quantity)
+                                sl += 1
+                                break
+                            else:
+                                print("Invalid quantity \nQuantity of item cannot be zero or negative")
+                                break
+                        else:
+                            print("Quantity can only be a whole number")
                 else:
                     print("Item number does not exist in menu")
             elif item_num.lower() == "menu":

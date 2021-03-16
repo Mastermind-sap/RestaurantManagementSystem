@@ -16,7 +16,14 @@ class Employee:
 
     # Function called when a employee is to login to his/her account
     def employee_login(self):
-        id = int(input("Employee ID: "))
+        while True:
+            id = input("Employee ID: ")
+            if id.isnumeric():
+                id = int(id)
+                break
+            else:
+                print("ID can only be numeric")
+
         passwd = stdiomask.getpass("Password: ", mask="*")
         if self.db.login_employee(id, passwd):
             self.id = id

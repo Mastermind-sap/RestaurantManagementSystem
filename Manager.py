@@ -17,10 +17,16 @@ class Manager:
     # Function called when a manager is to login to his/her account
     def manager_login(self):
         # Validating manager credentials from the database
-        id = int(input("Manager ID: "))
+        while True:
+            id = input("Manager ID: ")
+            if id.isnumeric():
+                break
+            else:
+                print("ID can only be numeric")
+
         passwd = stdiomask.getpass("Password: ", mask="*")
-        if self.db.login_manager(id, passwd):
-            self.id = id
+        if self.db.login_manager(int(id), passwd):
+            self.id = int(id)
             return True
         else:
             return False
@@ -49,16 +55,39 @@ class Manager:
                     number = self.db.vacancy_read("vacant_itemNo")
                     print("Item number: " + str(number))
                     name = input("Enter name of item: ")
-                    price = float(input("Enter price of item: "))
+                    while True:
+                        try:
+                            price = float(input("Enter price of item: "))
+                            break
+                        except Exception:
+                            print("Price can only be a floating point number")
+
                     self.db.add_item(number, name, price)
                     self.db.vacancy_update("vacant_itemNo")
                 elif int(choice) == 2:
-                    number = int(input("Enter item number of the item:"))
+                    while True:
+                        number = input("Enter item number of the item:")
+                        if number.isnumeric():
+                            number = int(number)
+                            break
+                        else:
+                            print("Item number can only be an integer")
                     self.db.remove_item(number)
                 elif int(choice) == 3:
-                    number = int(input("Enter item number:"))
+                    while True:
+                        number = input("Enter item number: ")
+                        if number.isnumeric():
+                            number = int(number)
+                            break
+                        else:
+                            print("Item number can only be an integer")
                     name = input("Enter name of item: ")
-                    price = float(input("Enter price of item: "))
+                    while True:
+                        try:
+                            price = float(input("Enter price of item: "))
+                            break
+                        except Exception:
+                            print("Price can only be a floating point number")
                     self.db.update_item(number, name, price)
                 elif int(choice) == 4:
                     self.db.show_menu()
@@ -166,16 +195,40 @@ class Manager:
                     number = self.db.vacancy_read("vacant_taxNo")
                     print("Tax number: " + str(number))
                     tax = input("Enter name of tax: ")
-                    percent = float(input("Enter tax percent: "))
+                    while True:
+                        try:
+                            percent = float(input("Enter tax percent: "))
+                            break
+                        except Exception:
+                            print("Tax percent can only be a floating point number")
+
                     self.db.add_tax(number, tax, percent)
                     self.db.vacancy_update("vacant_taxNo")
                 elif int(choice) == 2:
-                    number = int(input("Enter tax number:"))
+                    while True:
+                        number = input("Enter tax number:")
+                        if number.isnumeric():
+                            number = int(number)
+                            break
+                        else:
+                            print("Tax number can only be an integer")
                     self.db.remove_tax(number)
                 elif int(choice) == 3:
-                    number = int(input("Enter tax number:"))
+                    while True:
+                        number = input("Enter tax number:")
+                        if number.isnumeric():
+                            number = int(number)
+                            break
+                        else:
+                            print("Tax number can only be an integer")
                     tax = input("Enter name of tax: ")
-                    percent = float(input("Enter tax percent: "))
+                    while True:
+                        try:
+                            percent = float(input("Enter tax percent: "))
+                            break
+                        except Exception:
+                            print("Tax percent can only be a floating point number")
+
                     self.db.update_tax(number, tax, percent)
                 elif int(choice) == 4:
                     self.db.show_tax()

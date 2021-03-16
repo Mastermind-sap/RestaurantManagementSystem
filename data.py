@@ -47,9 +47,17 @@ class Data:
             password = passwd
         else:
             print("Default password to be used")
-        res = input("Enter restaurant name to access its database: ")
-        if len(res) != 0:
-            global restaurant
-            restaurant = res
-        else:
-            print("Default database (i.e. 'restaurant') to be used")
+        while True:
+            res = input("Enter restaurant name to access its database: ").lstrip().rstrip()
+            if len(res) != 0:
+                if " " not in res and not res.isnumeric():
+                    global restaurant
+                    restaurant = res
+                    break
+                elif res.isnumeric():
+                    print("Restaurant (i.e. database) name cannot be a number")
+                else:
+                    print("Restaurant (i.e. database) name cannot have a space")
+            else:
+                print("Default database (i.e. 'restaurant') to be used")
+                break
