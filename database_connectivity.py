@@ -18,7 +18,7 @@ class Database:
             self.mycursor = self.mydb.cursor()
         except Exception as e:
             print("Username or password entered is incorrect")
-            self.mydb=False
+            self.mydb = False
 
     # checks whether the python and mysql connection has been build properly
     def check_connection(self):
@@ -269,8 +269,10 @@ class Database:
                     while True:
                         quantity = input("Enter quantity of " + menu[int(item_num)][0] + " you want to order: ")
                         if quantity.isnumeric():
+                            quantity = int(quantity)
                             if quantity > 0:
-                                order += """({},'{}',{},{},{}),""".format(sl, menu[int(item_num)][0], menu[int(item_num)][1],
+                                order += """({},'{}',{},{},{}),""".format(sl, menu[int(item_num)][0],
+                                                                          menu[int(item_num)][1],
                                                                           quantity, menu[int(item_num)][1] * quantity)
                                 sl += 1
                                 break

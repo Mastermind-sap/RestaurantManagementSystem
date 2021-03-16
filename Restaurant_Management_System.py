@@ -21,7 +21,7 @@ class RestaurantManagementSystem:
 
     # main method of this class
     def main(self):
-        # Endless while loop of which runs throught the execution of the program
+        # Endless while loop of which runs throughout the execution of the program
         while True:
             # Printing the restaurant name
             print(data.restaurant.capitalize() + " Restaurant Management System")
